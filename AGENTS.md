@@ -615,14 +615,64 @@ project/
 
 ---
 
-## 8. Documents (PRD / BST / TSD)
+## 8. Document Chain
 
-Template akan diisi setelah diskusi dengan user.
+### 8.1 Alur Dokumen
 
-Standar dokumen:
-- **PRD:** Product Requirements Document — problem statement, features, acceptance criteria, non-functional
-- **TSD:** Technical Specification Document — architecture, data model, API spec, infra requirement
-- **BST:** Business Specification & Test — use cases, test scenarios, UAT criteria
+```
+BRD ──→ SOW ──→ PRD ──→ TSD ──→ Development ──→ UAT + BST ──→ Go Live ──→ SLA
+ │        │       │        │           │              │              │
+ │        │       │        │           │              │              │
+ └── Business    └── Product  └── Technical  └── Validation  └── Operations
+     Requirem-       Req.         Spec           (2 sisi)
+     ents
+```
+
+### 8.2 Dokumen Templates
+
+Semua template ada di `docs/templates/`:
+
+| Dokumen | File | Fungsi | Dibuat Oleh | Untuk Siapa |
+|---------|------|--------|-------------|-------------|
+| **BRD** | `docs/templates/BRD.md` | Business Requirements | BA / PM | Stakeholder, tim |
+| **SOW** | `docs/templates/SOW.md` | Statement of Work + Kontrak | PM | Legal, klien |
+| **PRD** | `docs/templates/PRD.md` | Product Requirements | PM | Developer, QA |
+| **TSD** | `docs/templates/TSD.md` | Technical Specification | Tech Lead / Engineer | Developer |
+| **UAT** | `docs/templates/UAT.md` | User Acceptance Test | QA | Klien (end user) |
+| **BST** | `docs/templates/BST.md` | Business Scenario Test | BA | Business Owner |
+| **SLA** | `docs/templates/SLA.md` | Service Level Agreement | PM | Klien, legal |
+
+### 8.3 Alur Kerja per Fase
+
+| Fase | Dokumen | Agent Terlibat | Gate |
+|------|---------|---------------|------|
+| Discovery | BRD | PM, BA | BRD signed |
+| Scoping | SOW | PM | SOW signed |
+| Product Design | PRD | PM, UI/UX, SA | PRD signed |
+| Technical Design | TSD | Architect, Tech Lead, Engineer | TSD signed |
+| Development | - | FE, BE, DBA, DevOps, dll | Sprint review |
+| Validation | UAT, BST | QA, BA, Business Owner | UAT+BST signed |
+| Launch | SLA | PM, DevOps, SRE | Go Live |
+
+### 8.4 Project Folder Structure
+
+```
+project/
+├── docs/
+│   ├── PRD/<feature>/PRD.md
+│   ├── TSD/<feature>/TSD.md
+│   ├── BST/<feature>/BST.md
+│   ├── UAT/<feature>/UAT.md
+│   └── sprint/sprint-<n>/
+│       ├── backlog.md
+│       └── retro.md
+├── .omo/
+│   ├── rules/
+│   ├── plans/
+│   └── evidence/
+├── dashboard/
+└── AGENTS.md
+```
 
 ---
 
