@@ -414,6 +414,7 @@ Emergency bypass:
 | **Guard** | **Release gak jalan tanpa approval** |
 | **Tools** | release plan, versioning, changelog, go/no-go |
 | **Triggers** | "release", "version", "tag", "changelog", "go-live" |
+| **Reporting** | Progress ke SM → SM consolidasi ke PM |
 
 ### 4.8 GOVERNANCE (4 agent)
 
