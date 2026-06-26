@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sprint Board — true-ranpoAgent</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=spec" rel="stylesheet">
+  <style>
+    * { font-family: 'JetBrains Mono', monospace; }
+    body { background: #0a0a0f; color: #e0e0e0; }
+    .card { background: #12121a; border: 1px solid #1e1e2e; border-radius: 12px; }
+    .column { min-height: 400px; }
+    .story-card { cursor: pointer; }
+    .story-card:hover { border-color: #3b82f6; }
+    .kanban { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    @media (max-width: 1024px) { .kanban { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .kanban { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div x-data="sprintBoard()" class="p-6 max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-white">Sprint Board</h1>
+        <p class="text-gray-400 text-sm mt-1">
+          Sprint <span x-text="currentSprint"></span> —
+          <span x-text="sprintDays"></span>
+        </p>
+      </div>
+      <a href="/index.html" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg text-sm hover:bg-gray-700 transition">Dashboard</a>
+    </div>
+
+    <!-- Kanban Board -->
+    <div class="kanban">
+      <template x-for="column in columns" :key="column.name">
+        <div class="card p-3">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-semibold text-white" x-text="column.name"></h3>
+            <span class="text-xs text-gray-500 bg-gray-800 px-2 py-0.5 rounded-full" x-text="column.stories.length"></span>
+          </div>
+          <div class="column space-y-2">
+            <template x-for="story in column.stories" :key="story.id">
+              <div class="story-card card p-3 border border-gray-800">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-mono text-gray-500" x-text="story.id"></span>
+                  <span class="text-xs px-1.5 py-0.5 rounded" :style="'background: ' + story.priority_color + '20; color: ' + story.priority_color" x-text="story.priority"></span>
+                </div>
+                <p class="text-sm text-white mb-2" x-text="story.title"></p>
+                <p class="text-xs text-gray-500 mb-3 line-clamp-2" x-text="story.description"></p>
+                <div class="flex flex-wrap gap-1">
+                  <template x-for="agent in story.assigned">
+                    <span class="text-xs px-1.5 py-0.5 rounded bg-gray-800 text-gray-400" x-text="agent"></span>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <script>
+    function sprintBoard() {
+      return {
+        currentSprint: 1,
+        sprintDays: 'Day 5 of 14',
+        columns: [
+          {
+            name: 'Backlog',
+            stories: [
+              { id: 'US-001', title: 'User Login', description: 'Users can login with email and password', priority: 'High', priority_color: '#ef4444', assigned: ['FE', 'BE'] },
+              { id: 'US-002', title: 'User Registration', description: 'New users can create an account', priority: 'High', priority_color: '#ef4444', assigned: ['FE', 'BE'] },
+              { id: 'US-005', title: 'Dashboard Layout', description: 'Main dashboard with summary widgets', priority: 'Medium', priority_color: '#f59e0b', assigned: ['FE', 'UI/UX'] },
+            ]
+          },
+          {
+            name: 'In Progress',
+            stories: [
+              { id: 'US-003', title: 'API Authentication', description: 'JWT-based auth for all API endpoints', priority: 'High', priority_color: '#ef4444', assigned: ['BE', 'Security Eng'] },
+              { id: 'US-007', title: 'Database Schema', description: 'Initial database schema and migrations', priority: 'High', priority_color: '#ef4444', assigned: ['DBA', 'BE'] },
+            ]
+          },
+          {
+            name: 'Review',
+            stories: [
+              { id: 'US-004', title: 'Password Reset', description: 'Forgot password flow with email', priority: 'Medium', priority_color: '#f59e0b', assigned: ['BE', 'QA'] },
+            ]
+          },
+          {
+            name: 'Done',
+            stories: [
+              { id: 'US-006', title: 'Project Setup', description: 'Monorepo setup with Bun workspaces', priority: 'High', priority_color: '#ef4444', assigned: ['DevOps', 'Tech Lead'] },
+              { id: 'US-008', title: 'CI/CD Pipeline', description: 'GitHub Actions for test and deploy', priority: 'Medium', priority_color: '#f59e0b', assigned: ['DevOps'] },
+            ]
+          }
+        ]
+      }
+    }
+  </script>
+</body>
+</html>

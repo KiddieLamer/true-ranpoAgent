@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documents — true-ranpoAgent</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'JetBrains Mono', monospace; }
+    body { background: #0a0a0f; color: #e0e0e0; }
+    .card { background: #12121a; border: 1px solid #1e1e2e; border-radius: 12px; }
+  </style>
+</head>
+<body>
+  <div x-data="docs()" class="p-6 max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold text-white">Project Documents</h1>
+      <a href="/index.html" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg text-sm hover:bg-gray-700 transition">Dashboard</a>
+    </div>
+
+    <!-- Doc Types -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <template x-for="docType in docTypes" :key="docType.name">
+        <div class="card p-5">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-2xl" x-text="docType.icon"></span>
+            <div>
+              <h3 class="text-lg font-semibold text-white" x-text="docType.name"></h3>
+              <p class="text-xs text-gray-500" x-text="docType.description"></p>
+            </div>
+          </div>
+          <template x-for="doc in docType.documents" :key="doc.name">
+            <a href="#" class="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-gray-800 transition group">
+              <span class="text-sm text-gray-300 group-hover:text-white" x-text="doc.name"></span>
+              <span class="text-xs text-gray-600" x-text="doc.status"></span>
+            </a>
+          </template>
+        </div>
+      </template>
+    </div>
+
+    <!-- Sprint Artifacts -->
+    <div class="card p-5">
+      <h2 class="text-lg font-semibold text-white mb-4">Sprint Artifacts</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <template x-for="artifact in sprintArtifacts" :key="artifact.name">
+          <a href="#" class="card p-4 border border-gray-800 hover:border-blue-600 transition">
+            <p class="text-sm font-semibold text-white" x-text="artifact.name"></p>
+            <p class="text-xs text-gray-500 mt-1" x-text="artifact.sprint"></p>
+            <p class="text-xs text-gray-600 mt-2" x-text="artifact.updated"></p>
+          </a>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function docs() {
+      return {
+        docTypes: [
+          {
+            name: 'PRD', icon: '📋',
+            description: 'Product Requirements Document',
+            documents: [
+              { name: 'Inventory System', status: 'Draft' },
+              { name: 'User Management', status: 'Approved' },
+              { name: 'Reporting Module', status: 'In Review' },
+            ]
+          },
+          {
+            name: 'TSD', icon: '🔧',
+            description: 'Technical Specification Document',
+            documents: [
+              { name: 'Inventory System', status: 'In Progress' },
+              { name: 'User Management', status: 'Done' },
+              { name: 'API Architecture', status: 'Approved' },
+            ]
+          },
+          {
+            name: 'BST', icon: '✅',
+            description: 'Business Specification & Test',
+            documents: [
+              { name: 'User Login Test', status: 'Approved' },
+              { name: 'Registration Flow', status: 'Draft' },
+              { name: 'Payment Module', status: 'Pending' },
+            ]
+          }
+        ],
+        sprintArtifacts: [
+          { name: 'Backlog', sprint: 'Sprint 1', updated: 'Updated 2h ago' },
+          { name: 'Stories', sprint: 'Sprint 1', updated: 'Updated 1h ago' },
+          { name: 'Review', sprint: 'Sprint 1', updated: 'Not yet' },
+          { name: 'Retro', sprint: 'Sprint 0', updated: 'Done' },
+        ]
+      }
+    }
+  </script>
+</body>
+</html>

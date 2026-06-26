@@ -1,0 +1,52 @@
+{
+  "name": "true-ranpo-agent",
+  "version": "0.1.0",
+  "description": "Your AI-Powered Scrum Team — From PRD to Delivery. 30 Specialized Agents.",
+  "main": "./dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "workspaces": [
+    "packages/utils",
+    "packages/model-core",
+    "packages/prompts-core",
+    "packages/rules-engine",
+    "packages/agents-md-core",
+    "packages/telemetry-core",
+    "packages/skills-loader-core",
+    "packages/mcp-stdio-core",
+    "packages/boulder-state",
+    "packages/delegate-core",
+    "packages/true-ranpo"
+  ],
+  "bin": {
+    "true-ranpo-agent": "bin/true-ranpo-agent.js",
+    "true-ranpo": "bin/true-ranpo-agent.js",
+    "ranpo": "bin/true-ranpo-agent.js"
+  },
+  "scripts": {
+    "build": "bun build ./packages/true-ranpo/src/index.ts --outdir ./dist --target bun --format esm && tsc --emitDeclarationOnly",
+    "build:all": "bun run build",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "clean": "rm -rf dist",
+    "doctor": "bun run true-ranpo doctor"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.15.0",
+    "@opencode-ai/sdk": "^1.15.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "commander": "^14.0.0",
+    "zod": "^4.4.0",
+    "jsonc-parser": "^3.3.0",
+    "js-yaml": "^4.1.0",
+    "picocolors": "^1.1.0",
+    "ssh2": "^1.16.0",
+    "@kubernetes/client-node": "^1.0.0",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "bun-types": "^1.3.0",
+    "typescript": "^6.0.0"
+  },
+  "license": "MIT"
+}
