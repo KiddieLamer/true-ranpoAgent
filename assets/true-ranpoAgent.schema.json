@@ -2,15 +2,66 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://raw.githubusercontent.com/KiddieLamer/true-ranpoAgent/main/assets/true-ranpoAgent.schema.json",
   "title": "True RanpoAgent Configuration",
-  "description": "Configuration schema for true-ranpoAgent — 31 specialized IT agents",
+  "description": "Configuration schema for true-ranpoAgent — 31 specialized IT agents with guardrails, governance chain, and Scrum framework",
   "type": "object",
   "properties": {
     "$schema": {
       "type": "string"
     },
+    "new_task_system_enabled": {
+      "type": "boolean"
+    },
+    "default_run_agent": {
+      "type": "string"
+    },
+    "agent_order": {
+      "maxItems": 64,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 128
+      }
+    },
+    "agent_definitions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "disabled_agents": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "disabled_skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "disabled_hooks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "disabled_tools": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "disabled_providers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "agents": {
       "type": "object",
-      "description": "Mapping of agent names to model configurations",
+      "description": "Mapping of agent names to model and behavior configurations",
       "propertyNames": {
         "type": "string",
         "enum": [
@@ -32,25 +83,271 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "Model identifier (e.g. DeepSeek-V.4Pro, gpt-5, claude-sonnet-4)"
+            "description": "Model identifier (e.g. DeepSeek-V.4Pro, gpt-5, claude-sonnet-4)",
+            "examples": ["DeepSeek-V.4Pro", "gpt-5", "claude-sonnet-4", "gemini-2.5-flash"]
           },
-          "prompt": {
-            "type": "string",
-            "description": "Override default system prompt for this agent"
+          "fallback_models": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "model": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "type": "string"
+                        },
+                        "reasoningEffort": {
+                          "type": "string",
+                          "enum": ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+                        },
+                        "temperature": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 2
+                        },
+                        "top_p": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        },
+                        "maxTokens": {
+                          "type": "number"
+                        },
+                        "thinking": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": ["enabled", "disabled"]
+                            },
+                            "budgetTokens": {
+                              "type": "number"
+                            }
+                          },
+                          "required": ["type"],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": ["model"],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            ]
           },
-          "description": {
+          "variant": {
+            "type": "string"
+          },
+          "category": {
             "type": "string",
-            "description": "Override default description"
+            "description": "Assign agent to a category for grouped model routing"
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "temperature": {
             "type": "number",
             "minimum": 0,
-            "maximum": 2
+            "maximum": 2,
+            "description": "Response randomness (0 = deterministic, 2 = very creative)"
           },
           "top_p": {
             "type": "number",
             "minimum": 0,
             "maximum": 1
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Override default system prompt for this agent. Use {file:./path} to load from file"
+          },
+          "prompt_append": {
+            "type": "string",
+            "description": "Additional instructions appended to the default prompt"
+          },
+          "tools": {
+            "type": "object",
+            "description": "Enable or disable specific tools for this agent",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "boolean"
+            }
+          },
+          "disable": {
+            "type": "boolean",
+            "description": "Set to true to disable this agent"
+          },
+          "description": {
+            "type": "string",
+            "description": "Brief description of what this agent does"
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["subagent", "primary", "all"],
+            "description": "Agent mode: primary (switchable via Tab), subagent (via @mention)"
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9A-Fa-f]{6}$",
+            "description": "Hex color for agent UI accent"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Human-readable name shown in UI"
+          },
+          "permission": {
+            "type": "object",
+            "properties": {
+              "read": {
+                "type": "string",
+                "enum": ["ask", "allow", "deny"]
+              },
+              "edit": {
+                "type": "string",
+                "enum": ["ask", "allow", "deny"]
+              },
+              "bash": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "enum": ["ask", "allow", "deny"]
+                  },
+                  {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {
+                      "type": "string",
+                      "enum": ["ask", "allow", "deny"]
+                    }
+                  }
+                ]
+              },
+              "write": {
+                "type": "string",
+                "enum": ["ask", "allow", "deny"]
+              },
+              "glob": {
+                "type": "string",
+                "enum": ["ask", "allow", "deny"]
+              },
+              "grep": {
+                "type": "string",
+                "enum": ["ask", "allow", "deny"]
+              },
+              "webfetch": {
+                "type": "string",
+                "enum": ["ask", "allow", "deny"]
+              },
+              "websearch": {
+                "type": "string",
+                "enum": ["ask", "allow", "deny"]
+              },
+              "task": {
+                "type": "string",
+                "enum": ["ask", "allow", "deny"]
+              },
+              "todowrite": {
+                "type": "string",
+                "enum": ["ask", "allow", "deny"]
+              },
+              "doom_loop": {
+                "type": "string",
+                "enum": ["ask", "allow", "deny"]
+              },
+              "external_directory": {
+                "type": "string",
+                "enum": ["ask", "allow", "deny"]
+              },
+              "skill": {
+                "type": "string",
+                "enum": ["ask", "allow", "deny"]
+              },
+              "question": {
+                "type": "string",
+                "enum": ["ask", "allow", "deny"]
+              }
+            },
+            "additionalProperties": {
+              "type": "string",
+              "enum": ["ask", "allow", "deny"]
+            }
+          },
+          "maxTokens": {
+            "type": "number",
+            "description": "Maximum tokens in agent response"
+          },
+          "thinking": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["enabled", "disabled"]
+              },
+              "budgetTokens": {
+                "type": "number"
+              }
+            },
+            "required": ["type"],
+            "additionalProperties": false
+          },
+          "reasoningEffort": {
+            "type": "string",
+            "enum": ["none", "minimal", "low", "medium", "high", "xhigh", "max"],
+            "description": "Reasoning effort level (for OpenAI reasoning models)"
+          },
+          "textVerbosity": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          },
+          "providerOptions": {
+            "type": "object",
+            "description": "Additional provider-specific parameters",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "guardrails": {
+            "type": "array",
+            "description": "Custom guardrail rules for this agent",
+            "items": {
+              "type": "string"
+            }
+          },
+          "forwardTo": {
+            "type": "string",
+            "description": "Default forward target for out-of-scope requests"
+          },
+          "triggers": {
+            "type": "array",
+            "description": "Keywords that trigger this agent",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "required": ["model"],
@@ -59,7 +356,7 @@
     },
     "categories": {
       "type": "object",
-      "description": "Category-level model routing",
+      "description": "Category-level model routing for intent-based dispatch",
       "propertyNames": {
         "type": "string",
         "enum": [
@@ -71,6 +368,10 @@
         "type": "object",
         "properties": {
           "model": {
+            "type": "string",
+            "description": "Default model for this category"
+          },
+          "variant": {
             "type": "string"
           },
           "temperature": {
@@ -82,11 +383,44 @@
             "type": "number",
             "minimum": 0,
             "maximum": 1
+          },
+          "reasoningEffort": {
+            "type": "string",
+            "enum": ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+          },
+          "maxTokens": {
+            "type": "number"
+          },
+          "thinking": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["enabled", "disabled"]
+              },
+              "budgetTokens": {
+                "type": "number"
+              }
+            },
+            "required": ["type"],
+            "additionalProperties": false
           }
         },
         "required": ["model"],
         "additionalProperties": false
       }
+    },
+    "mcp_env_allowlist": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "hashline_edit": {
+      "type": "boolean"
+    },
+    "model_fallback": {
+      "type": "boolean"
     }
   },
   "required": ["agents"],
