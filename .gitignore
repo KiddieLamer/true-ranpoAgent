@@ -7,3 +7,4 @@ dist/
 .omo/plans/
 .omo/teams/
 coverage/
+.opencode/

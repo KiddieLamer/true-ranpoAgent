@@ -1,164 +1,104 @@
-# true-ranpoAgent
+# 🤖 true-ranpoAgent
 
-> **Your AI-Powered Scrum Team — From PRD to Delivery.**
-> Open Source. OpenCode Plugin. 30 Specialized Agents.
-
----
-
-## Overview
-
-**true-ranpoAgent** adalah plugin [OpenCode](https://opencode.ai) yang mengubah AI agent menjadi **tim Scrum lengkap** — dari Project Manager yang bikin PRD, Scrum Master yang breakdown stories, sampe FE/BE/QA/DevOps yang deliver.
-
-### Filosofi
-
-- **30 agent = 30 role IT nyata.** Masing-masing punya domain knowledge, tools, dan batasan sendiri.
-- **Guardrails ketat.** Agent gak bisa kerja di luar scope. Forward ke SM → validasi → PM → BA kalo perlu.
-- **Scrum murni.** Sprint planning, daily standup, review, retrospective — semua ceremony dijalanin.
-- **Bahasa ngikut user.** User pake Bahasa Indonesia? Agent jawab Bahasa Indonesia. User pake English? Agent jawab English.
-- **Open source.** Pahala jariyah buat semua yang berkontribusi dan yang pake.
-
-## Quick Start
-
-```bash
-# Clone
-git clone https://github.com/<your-org>/true-ranpoAgent.git
-cd true-ranpoAgent
-
-# Install
-bun install
-
-# Build
-bun run build
-
-# Run Dashboard
-bun run dashboard
-```
-
-## Architecture
-
-```
-                          USER
-                           │
-                           ▼
-                    ┌──────────────┐
-                    │      PM      │
-                    │   (Product   │
-                    │   Owner +    │
-                    │   Manager)   │
-                    └──────┬───────┘
-                           │ vision, PRD, backlog
-                           ▼
-                    ┌──────────────┐
-                    │      SM      │
-                    │    Scrum     │
-                    │   Master     │
-                    └──────┬───────┘
-                           │ breakdown, assign, tracking
-     ┌─────────────────────┼──────────────────────────┐
-     │                     │                          │
-     ▼                     ▼                          ▼
-┌──────────┐       ┌──────────────┐          ┌──────────────┐
-│ ANALYSIS │       │ DEVELOPMENT  │          │  INFRA & OPS │
-├──────────┤       ├──────────────┤          ├──────────────┤
-│ BA       │       │ FE Engineer  │          │ DevOps       │
-│ System   │       │ BE Engineer  │          │ Cloud Eng    │
-│ Analyst  │       │ Mobile Dev   │          │ Network Admin│
-│ UI/UX    │       │ Full Stack   │          │ SRE          │
-│ Architect│       │ API Dev      │          │ Config Mgr   │
-└──────────┘       │ DBA          │          │ IT Support   │
-                   │ Security Eng │          └──────────────┘
-                   │ Performance  │
-                   │ Data Eng     │          ┌──────────────┐
-                   │ Data Sci     │          │ GOVERNANCE   │
-                   └──────────────┘          ├──────────────┤
-                          │                  │ Tech Lead    │
-     ┌──────────────┐     │                  │ IT Compl.    │
-     │   QUALITY    │     │                  │ Enterp. Arch │
-     ├──────────────┤     │                  │ CISO         │
-     │ QA           │◄────┘                  └──────────────┘
-     │ Tech Writer  │
-     │ Release Mgr  │          ┌──────────────┐
-     │ Perf Eng     │          │   SUPPORT    │
-     └──────────────┘          ├──────────────┤
-                               │ IT Asset Mgr │
-                               │ IT Compliance│
-                               └──────────────┘
-```
-
-## 30 Agents
-
-| # | Agent | Role | Category |
-|---|-------|------|----------|
-| 1 | **PM** | Product Owner + Manager | Management |
-| 2 | **Scrum Master** | Ceremony & Flow | Management |
-| 3 | **Delivery PM** | Timeline & Risk | Management |
-| 4 | **BA** | Business Analyst | Analysis |
-| 5 | **System Analyst** | System Design | Analysis |
-| 6 | **Architect** | Solutions Architect | Analysis |
-| 7 | **UI/UX** | User Interface Design | Design |
-| 8 | **FE** | Frontend Engineer | Development |
-| 9 | **BE** | Backend Engineer | Development |
-| 10 | **Mobile** | Mobile Developer | Development |
-| 11 | **Full Stack** | Full Stack Engineer | Development |
-| 12 | **API Dev** | API Developer | Development |
-| 13 | **DBA** | Database Admin | Development |
-| 14 | **Security Eng** | Security Engineer | Development |
-| 15 | **Perf Eng** | Performance Engineer | Development |
-| 16 | **Data Eng** | Data Engineer | Data |
-| 17 | **Data Sci** | Data Scientist | Data |
-| 18 | **QA** | Quality Assurance | Quality |
-| 19 | **DevOps** | DevOps Engineer | Infra & Ops |
-| 20 | **Cloud Eng** | Cloud Engineer | Infra & Ops |
-| 21 | **Network Admin** | Network Admin | Infra & Ops |
-| 22 | **SRE** | Site Reliability Eng | Infra & Ops |
-| 23 | **Config Mgr** | Config Manager | Infra & Ops |
-| 24 | **IT Support** | IT Support | Infra & Ops |
-| 25 | **Release Mgr** | Release Manager | Infra & Ops |
-| 26 | **Tech Lead** | Tech Lead | Governance |
-| 27 | **IT Compl** | IT Compliance | Governance |
-| 28 | **CISO** | CISO | Governance |
-| 29 | **Enterp Arch** | Enterprise Architect | Governance |
-| 30 | **Tech Writer** | Technical Writer | Support |
-
-## Guardrails
-
-Setiap agent HARUS menolak permintaan di luar scope sprint, dan WAJIB forward ke SM.
-
-```
-User → Agent → SM (validasi sprint) → PM (validasi scope) → BA (analisa impact)
-```
-
-## Project Structure
-
-```
-project/
-├── AGENTS.md                  # Master reference (baca ini!)
-├── docs/                      # PRD, TSD, BST, sprint artifacts
-│   ├── PRD/<feature>/PRD.md
-│   ├── TSD/<feature>/TSD.md
-│   ├── BST/<feature>/BST.md
-│   └── sprint/sprint-<n>/
-├── dashboard/                 # HTML static dashboard
-│   ├── index.html           # Main dashboard (30 agents)
-│   ├── sprint.html          # Kanban sprint board
-│   └── docs.html            # Document viewer
-├── packages/                  # Monorepo packages
-└── .omo/                      # Agent workspace
-```
-
-## Dashboard
-
-Static HTML dashboard dengan Tailwind CSS + Alpine.js. Dibuka pake browser langsung:
-
-```bash
-bunx serve dashboard/
-# atau tinggal double klik dashboard/index.html
-```
-
-## License
-
-MIT — Open Source. Pahala jariyah buat semua yang berkontribusi dan yang pake. 🤲
+> **Your AI-Powered Scrum Team — 31 IT Professionals Ready to Ship.**
+> Open Source. Plugin-less. Config-first.
 
 ---
 
-*Generated: 2026-06-27*
+## 🚀 Dalam 3 Langkah
+
+```bash
+# 1. Install OpenCode
+curl -fsSL https://opencode.ai/install | bash
+
+# 2. Setup provider → ~/.config/opencode/opencode.json
+#    baseURL: https://router.ranpo.my.id/v1
+
+# 3. Copy true-ranpoAgent.json → ~/.config/opencode/
+```
+
+Buka `opencode` → `/models` → pilih `@pm` → "bikin PRD fitur login"
+
+**Selesai.** Gak perlu clone. Gak perlu npm. Gak perlu plugin.
+
+---
+
+## 👥 31 Agent
+
+```
+📋 MANAGEMENT          🔧 DEVELOPMENT           ☁️ INFRA & OPS
+@pm                   @fe frontend              @devops
+@scrum-master         @be backend               @cloud-eng
+@delivery-pm          @fullstack                @network-admin
+                       @mobile                  @sre
+📊 ANALYSIS            @api-dev                 @config-mgr
+@ba                   @dba database             @it-support
+@system-analyst       @security-eng             @release-mgr
+@architect             @perf-eng
+                                             🔐 GOVERNANCE
+🎨 DESIGN             📦 DATA                   @tech-lead
+@ui-ux                @data-eng                 @it-compliance
+                       @data-sci                @ciso
+✅ QUALITY                                     @enterprise-arch
+@qa                   📖 SUPPORT
+                       @tech-writer             @it-asset-mgr
+```
+
+**Tiap agent punya:**
+- **Domain** — apa yang mereka kuasai
+- **Tools** — apa yang bisa mereka pake
+- **Conventions** — cara kerja standar
+- **Guardrails** — batasan yang gak boleh dilanggar
+- **Forwarding** — kalo di luar scope → `@scrum-master`
+
+---
+
+## 🛡️ Guardrails
+
+"Pak, tolong deploy ke production langsung"
+
+**Hampir semua agent jawab:** *"Maaf, di luar scope saya. Forwarding ke @scrum-master."*
+
+Ini yang bikin tim ini beda — agent tau batas mereka. Gak ada yang asal acc. Semua lewat chain:
+
+```
+Agent → SM (validasi sprint) → PM (validasi scope) → BA (impact analysis)
+```
+
+---
+
+## 📂 Struktur
+
+```
+true-ranpoAgent/
+├── true-ranpoAgent.json    ← Agent ↔ Model mapping (format OMO)
+├── skills/*/SKILL.md       ← 31 prompt + guardrails
+├── opencode.json           ← Template config
+├── docs/templates/         ← PRD, TSD, UAT, BST, SOW, BRD, SLA, RELEASE
+├── packages/               ← Plugin code
+└── dashboard/              ← HTML dashboard
+```
+
+---
+
+## 🎯 Yang Bisa Lo Lakuin
+
+| Kerjaan | Panggil Agent |
+|---------|---------------|
+| "Bikin PRD buat fitur payment" | `@pm` |
+| "Schema user table kurang" | `@dba` |
+| "Deploy staging" | `@devops` |
+| "API login lambat" | `@perf-eng` |
+| "Test fitur register" | `@qa` |
+| "Dokumentasiin API" | `@tech-writer` |
+| "Ada vulnerability CVE-2024-..." | `@security-eng` |
+| "Firewall blocked IP" | `@network-admin` |
+| "Sprint 3 planning" | `@scrum-master` |
+
+---
+
+## 📜 License
+
+MIT — Pahala jariyah. 🤲
+
+> Made with ❤️ for the Indonesian IT community.
