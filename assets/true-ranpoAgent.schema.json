@@ -29,6 +29,19 @@
         "minLength": 1
       }
     },
+    "disabled_mcps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "disabled_commands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "disabled_agents": {
       "type": "array",
       "items": {
@@ -113,7 +126,25 @@
                         "variant": {
                           "type": "string"
                         },
-                        "reasoningEffort": {
+          "compaction": {
+            "type": "object",
+            "description": "Override model/options for context compaction",
+            "properties": {
+              "model": {
+                "type": "string"
+              },
+              "variant": {
+                "type": "string"
+              },
+              "temperature": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 2
+              }
+            },
+            "additionalProperties": false
+          },
+          "reasoningEffort": {
                           "type": "string",
                           "enum": ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
                         },
@@ -415,6 +446,55 @@
       "items": {
         "type": "string"
       }
+    },
+    "auto_update": {
+      "type": "boolean",
+      "description": "Auto-update true-ranpoAgent on startup"
+    },
+    "default_mode": {
+      "type": "string",
+      "description": "Default agent mode when starting a new session"
+    },
+    "model_capabilities": {
+      "type": "object",
+      "description": "Capability flags per model",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "vision": {
+            "type": "boolean"
+          },
+          "thinking": {
+            "type": "boolean"
+          },
+          "function_calling": {
+            "type": "boolean"
+          },
+          "streaming": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "experimental": {
+      "type": "object",
+      "description": "Experimental feature flags",
+      "properties": {
+        "intent_detection": {
+          "type": "boolean"
+        },
+        "auto_routing": {
+          "type": "boolean"
+        },
+        "governance_chain": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
     },
     "hashline_edit": {
       "type": "boolean"
