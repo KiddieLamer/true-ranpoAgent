@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/KiddieLamer/true-ranpoAgent/main/assets/true-ranpoAgent.schema.json",
+  "title": "True RanpoAgent Configuration",
+  "description": "Configuration schema for true-ranpoAgent — 31 specialized IT agents",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "agents": {
+      "type": "object",
+      "description": "Mapping of agent names to model configurations",
+      "propertyNames": {
+        "type": "string",
+        "enum": [
+          "pm", "scrum-master", "delivery-pm",
+          "ba", "system-analyst", "architect",
+          "ui-ux",
+          "fe", "be", "mobile", "fullstack", "api-dev",
+          "dba", "security-eng", "perf-eng",
+          "data-eng", "data-sci",
+          "qa",
+          "devops", "cloud-eng", "network-admin", "sre",
+          "config-mgr", "it-support", "release-mgr",
+          "tech-lead", "it-compliance", "ciso", "enterprise-arch",
+          "tech-writer", "it-asset-mgr"
+        ]
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model identifier (e.g. DeepSeek-V.4Pro, gpt-5, claude-sonnet-4)"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Override default system prompt for this agent"
+          },
+          "description": {
+            "type": "string",
+            "description": "Override default description"
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "top_p": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": ["model"],
+        "additionalProperties": false
+      }
+    },
+    "categories": {
+      "type": "object",
+      "description": "Category-level model routing",
+      "propertyNames": {
+        "type": "string",
+        "enum": [
+          "visual-engineering", "ultrabrain", "deep",
+          "quick", "unspecified-low", "unspecified-high", "writing"
+        ]
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "top_p": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": ["model"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["agents"],
+  "additionalProperties": false
+}

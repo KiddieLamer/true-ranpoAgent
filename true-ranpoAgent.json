@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/dev/assets/oh-my-opencode.schema.json",
+  "$schema": "https://raw.githubusercontent.com/KiddieLamer/true-ranpoAgent/main/assets/true-ranpoAgent.schema.json",
   "agents": {
     "pm": { "model": "DeepSeek-V.4Pro" },
     "scrum-master": { "model": "DeepSeek-V.4Pro" },
